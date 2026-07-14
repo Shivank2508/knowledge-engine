@@ -3,6 +3,7 @@ import { parserPdf } from "../ parsers/pdf.parsers";
 import { chunkText } from "../services/chunk.service";
 import { embededChunk, embedQuery } from "../services/embedding.service";
 import { vectorStoreService } from "../services/vector-store.service";
+import { GenberateAiKnowlege } from "../services/generation.service";
 
 export const uploadDocument = async (req: Request, res: Response) => {
     if (!req.file) {
@@ -15,14 +16,16 @@ export const uploadDocument = async (req: Request, res: Response) => {
     const embedded = await embededChunk(chunks);
 
     // const vector = await vectorStoreService.addDocuments(embedded)
-    const query = "What is Akshaya Patra Wave 7.0?";
+    const query = "Which states are covered under Akshaya Patra Wave 7.0?";
 
     const queryEmbedding = await embedQuery(query);
 
-    const searchDoc = await vectorStoreService.searchDocuments(queryEmbedding);
+    const response = await GenberateAiKnowlege(queryEmbedding, query)
+
     return res.status(200).json({
         message: "uploaded succesfull",
-        vector: searchDoc,
+        vector: queryEmbedding,
+        response: response
     })
 
 }

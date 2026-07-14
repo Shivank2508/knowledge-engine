@@ -1,16 +1,9 @@
-import { ChromaClient } from "chromadb"
 import { EmbeddedChunk } from "../types/embedding.type"
 import { Pinecone } from "@pinecone-database/pinecone";
-
-
 const pc = new Pinecone({
     apiKey: `${process.env.PINECONE_API_KEY}`
 })
-
-
 const index = pc.index('knowledge-base');
-
-
 class VectorStoreService {
     async addDocuments(EmbeddedChunk: EmbeddedChunk[]) {
         await index.upsert({
@@ -36,9 +29,6 @@ class VectorStoreService {
 
         return results.matches;
     }
-
-
-
 }
 
 export const vectorStoreService = new VectorStoreService();
